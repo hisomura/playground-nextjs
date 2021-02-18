@@ -14,7 +14,7 @@ export default function Ssg(props: StaticProps) {
   const tick = useSelector<State>((state) => state.tick);
   return (
     <div className={styles.container}>
-      <h1>Home</h1>
+      <h1>SSG</h1>
       <div>
         date: {props.time}
         score: {props.score}

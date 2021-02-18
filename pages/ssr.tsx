@@ -14,7 +14,7 @@ export default function Ssr(props: ServerSideProps) {
   const tick = useSelector<State>((state) => state.tick);
   return (
     <div className={styles.container}>
-      <h1>Home</h1>
+      <h1>SSR</h1>
       <div>
         date: {props.time}
         score: {props.score}
