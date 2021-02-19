@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import { State } from "../store/store";
+import { State, wrapper } from "../store/store";
 import styles from "../styles/Home.module.css";
-import { GetServerSideProps } from "next";
 import Links from "./links";
 import dayjs from "dayjs";
+import Tick from "./tick";
 
 type ServerSideProps = {
   time: string;
@@ -21,15 +21,22 @@ export default function Ssr(props: ServerSideProps) {
       </div>
       <div>tick: {tick}</div>
       <Links />
+      <Tick />
     </div>
   );
 }
 
-export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
-  _context
-) => ({
-  props: {
-    time: dayjs().format("HH:mm:ss.SS"),
-    score: Math.floor(Math.random() * 100),
-  },
+export const getServerSideProps = wrapper.getServerSideProps<{
+  props: ServerSideProps;
+}>(({ store }) => {
+  const time = dayjs().format("HH:mm:ss.SS");
+  console.log("2. Page.getServerSideProps uses the store to dispatch things");
+  store.dispatch({ type: "TICK", payload: `TICK in SSR ${time}` });
+
+  return {
+    props: {
+      time,
+      score: Math.floor(Math.random() * 100),
+    },
+  };
 });

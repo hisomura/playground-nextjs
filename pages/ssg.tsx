@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import { State } from "../store/store";
+import { State, wrapper } from "../store/store";
 import styles from "../styles/Home.module.css";
-import { GetStaticProps } from "next";
 import Links from "./links";
 import dayjs from "dayjs";
+import Tick from "./tick";
 
 type StaticProps = {
   time: string;
@@ -21,15 +21,22 @@ export default function Ssg(props: StaticProps) {
       </div>
       <div>tick: {tick}</div>
       <Links />
+      <Tick />
     </div>
   );
 }
 
-export const getStaticProps: GetStaticProps<StaticProps> = async (
-  _context
-) => ({
-  props: {
-    time: dayjs().format("HH:mm:ss.SS"),
-    score: Math.floor(Math.random() * 100),
-  },
+export const getStaticProps = wrapper.getStaticProps<{
+  props: StaticProps;
+}>(({ store }) => {
+  const time = dayjs().format("HH:mm:ss.SS");
+  console.log("2. Page.getStaticProps uses the store to dispatch things");
+  store.dispatch({ type: "TICK", payload: `TICK in SSG ${time}` });
+
+  return {
+    props: {
+      time,
+      score: Math.floor(Math.random() * 100),
+    },
+  };
 });
