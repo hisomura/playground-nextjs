@@ -19,6 +19,14 @@ export default function Tick() {
       >
         Tick 2
       </button>
+
+      <button
+        onClick={() => {
+          dispatch({ type: "TEST_SAGA_WORKER" });
+        }}
+      >
+        Test Saga
+      </button>
     </>
   );
 }
