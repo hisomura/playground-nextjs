@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
-import { State } from "../store/store";
+import { RootState } from "../store/store";
 
 export default function SelectorTest2() {
-  const state = useSelector<State, State>(
+  const state = useSelector<RootState, RootState>(
     (state) => state,
-    (oldState, newState) => oldState.tick === newState.tick
+    (oldState, newState) => oldState.tick.tick === newState.tick.tick
   );
   console.log("SelectorTest2 is rendering.", state);
 

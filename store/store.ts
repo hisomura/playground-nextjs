@@ -1,11 +1,23 @@
 import createSagaMiddleware, { Task } from "@redux-saga/core";
 import dayjs from "dayjs";
 import { Context, createWrapper, HYDRATE, MakeStore } from "next-redux-wrapper";
-import { AnyAction, applyMiddleware, compose, createStore, Store } from "redux";
+import {
+  AnyAction,
+  applyMiddleware,
+  combineReducers,
+  compose,
+  createStore,
+  Store,
+} from "redux";
 import { call, put, takeEvery } from "redux-saga/effects";
 
-export interface State {
+export interface TickState {
   tick: string;
+}
+
+export interface HelloState {
+  name: string;
+  count: number;
 }
 
 export interface SagaStore extends Store {
@@ -13,13 +25,10 @@ export interface SagaStore extends Store {
 }
 
 // create your reducer
-const reducer = (state: State = { tick: "init" }, action: AnyAction) => {
-  console.log(state, action);
-  //
-  // @ts-ignore
-  // if (state === false) {
-  //   return {tick: "init"}
-  // }
+const tickReducer = (
+  state: TickState = { tick: "init" },
+  action: AnyAction
+) => {
   switch (action.type) {
     case HYDRATE:
       // Attention! This will overwrite client state! Real apps should use proper reconciliation.
@@ -30,6 +39,26 @@ const reducer = (state: State = { tick: "init" }, action: AnyAction) => {
       return state;
   }
 };
+
+const helloReducer = (
+  state: HelloState = { name: "foo", count: 0 },
+  action: AnyAction
+) => {
+  switch (action.type) {
+    case HYDRATE:
+      return { ...state, ...action.payload };
+    case "TICK":
+      return { ...state, tick: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const rootReducer = combineReducers({
+  tick: tickReducer,
+  hello: helloReducer,
+});
+export type RootState = ReturnType<typeof rootReducer>;
 
 const composeEnhancers =
   (typeof window !== "undefined" &&
@@ -61,12 +90,12 @@ function* rootSaga() {
   yield takeEvery("TEST_SAGA_WORKER", testSagaWorker);
 }
 
-const makeStore: MakeStore<State> = (_context: Context) => {
+const makeStore: MakeStore<TickState> = (_context: Context) => {
   const sagaMiddleware = createSagaMiddleware();
 
   // const store = createStore(reducer, applyMiddleware(sagaMiddleware));
   const store = createStore(
-    reducer,
+    rootReducer,
     composeEnhancers(applyMiddleware(sagaMiddleware))
   );
   (store as SagaStore).sagaTask = sagaMiddleware.run(rootSaga);
@@ -75,4 +104,4 @@ const makeStore: MakeStore<State> = (_context: Context) => {
 };
 
 // export an assembled wrapper
-export const wrapper = createWrapper<State>(makeStore, { debug: true });
+export const wrapper = createWrapper<TickState>(makeStore, { debug: true });

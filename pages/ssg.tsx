@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { State, wrapper } from "../store/store";
+import { RootState, wrapper } from "../store/store";
 import styles from "../styles/Home.module.css";
 import Links from "./links";
 import dayjs from "dayjs";
@@ -11,7 +11,7 @@ type StaticProps = {
 };
 
 export default function Ssg(props: StaticProps) {
-  const tick = useSelector<State>((state) => state.tick);
+  const tick = useSelector<RootState>((state) => state.tick.tick);
   return (
     <div className={styles.container}>
       <h1>SSG</h1>
