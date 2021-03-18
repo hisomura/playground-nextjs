@@ -35,6 +35,8 @@ const tickReducer = (
       return { ...state, ...action.payload };
     case "TICK":
       return { ...state, tick: action.payload };
+    case "RETURN_NEW":
+      return { ...state };
     default:
       return state;
   }
@@ -48,7 +50,13 @@ const helloReducer = (
     case HYDRATE:
       return { ...state, ...action.payload };
     case "TICK":
+      console.log("hello, tick", state);
       return { ...state, tick: action.payload };
+    case "HELLO":
+      return { ...state, tick: "Hello, World!" };
+    case "HOGE":
+      state.name = "aiueo";
+      return state;
     default:
       return state;
   }

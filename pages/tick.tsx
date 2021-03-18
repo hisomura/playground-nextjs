@@ -22,6 +22,38 @@ export default function Tick() {
 
       <button
         onClick={() => {
+          dispatch({ type: "HELLO" });
+        }}
+      >
+        Hello
+      </button>
+
+      <button
+        onClick={() => {
+          dispatch({ type: "NOTHING" });
+        }}
+      >
+        Nothing
+      </button>
+
+      <button
+        onClick={() => {
+          dispatch({ type: "HOGE" });
+        }}
+      >
+        Hoge
+      </button>
+
+      <button
+        onClick={() => {
+          dispatch({ type: "RETURN_NEW" });
+        }}
+      >
+        RETURN_NEW tick state
+      </button>
+
+      <button
+        onClick={() => {
           dispatch({ type: "TEST_SAGA_WORKER" });
         }}
       >
